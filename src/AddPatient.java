@@ -5,6 +5,8 @@ import java.awt.*;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.*;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class AddPatient extends JFrame implements ActionListener {
     
@@ -20,8 +22,8 @@ public class AddPatient extends JFrame implements ActionListener {
     JLabel BirthDateLabel;
     JDateChooser BirthDateTF;
     
-    JLabel AgeLabel;
-    JTextField AgeTF;
+    JLabel AgeLabel,dispAgeLabel;
+    JButton CalculateAge;
     
     JLabel BloodGroupLabel;
     JComboBox BloodGroupCMB;
@@ -45,7 +47,7 @@ public class AddPatient extends JFrame implements ActionListener {
             }else if(FemaleRB.isSelected()){
                 gender="F";
             }
-            String age = AgeTF.getText();
+            String age = dispAgeLabel.getText();
             int AGE = Integer.parseInt(age);
             String birthdate =((JTextField)BirthDateTF.getDateEditor().getUiComponent()).getText();
             String bloodgroup = (String)BloodGroupCMB.getSelectedItem();
@@ -60,7 +62,9 @@ public class AddPatient extends JFrame implements ActionListener {
             {
                 try
                 {
-                    new File("F:\\SGP-1\\Database\\"+mobile).mkdir();
+                    new File("D:\\SGP-1\\Database\\"+mobile).mkdir();
+                    new File("D:\\SGP-1\\Database\\"+mobile+"\\Report").mkdir();
+                    new File("D:\\SGP-1\\Database\\"+mobile+"\\Bill").mkdir();
                     connection c = new connection();
                     c.createConnection();
                     String InsertPetient = "INSERT INTO patientdetails values('"+ mobile +"','"+name+"','"+gender+"','"+AGE+"','"+birthdate+"','"+bloodgroup+"','"+address+"')";
@@ -72,17 +76,17 @@ public class AddPatient extends JFrame implements ActionListener {
                     }
                     catch(Exception e)
                     {
-                        System.out.println("Hello");
+                       e.printStackTrace();
                     }
                     JOptionPane.showMessageDialog(null,"Patient Details Added Successfully.");
                     NameTF.setText("");
                     GenderButtonGroup.clearSelection();
                     BirthDateTF.setCalendar(null);
-                    AgeTF.setText("");
+                    dispAgeLabel.setText("");
                     BloodGroupCMB.setSelectedIndex(0);
                     MobileNumberTF.setText("");
                     AddressTA.setText("");
-                    String CreateTable = "create table Patient" + mobile + ".time_record (dd varchar(3), mm varchar(3), yyyy varchar(5), hh varchar(3), mt varchar(3), Precautions varchar(150), Allergies varchar(150), Disease varchar(50))";
+                    String CreateTable = "create table Patient" + mobile + ".time_record (dd varchar(3), mm varchar(3), yyyy varchar(5), hh varchar(3), mt varchar(3), Precautions varchar(150), Allergies varchar(150), Disease varchar(150))";
                     c.s.executeUpdate(CreateTable);
                     c.disconnectConnection();
                     c = null;
@@ -99,7 +103,7 @@ public class AddPatient extends JFrame implements ActionListener {
             NameTF.setText("");
             GenderButtonGroup.clearSelection();
             BirthDateTF.setCalendar(null);
-            AgeTF.setText("");
+            dispAgeLabel.setText("");
             BloodGroupCMB.setSelectedIndex(0);
             MobileNumberTF.setText("");
             AddressTA.setText("");
@@ -109,14 +113,40 @@ public class AddPatient extends JFrame implements ActionListener {
             new Reception().setVisible(true);
             this.setVisible(false);
         }
+        else if(ae.getSource() == CalculateAge){
+            String birthdate =((JTextField)BirthDateTF.getDateEditor().getUiComponent()).getText();
+            if(!birthdate.equals("")){
+                calculateAge();
+            }else{
+                JOptionPane.showMessageDialog(null,"Please Add BirthDate.");
+            }
+        }
+    }
+    
+    void calculateAge(){
+            String dob = ((JTextField)BirthDateTF.getDateEditor().getUiComponent()).getText();;
+            String dbirth[] = dob.split("/");
+            int day = Integer.parseInt(dbirth[0]);
+            int month = Integer.parseInt(dbirth[1]);
+            int year = Integer.parseInt(dbirth[2]);
+            LocalDate selectedDate = LocalDate.of(year,month,day);
+            LocalDate currentDate = LocalDate.now();
+            int resultYear = Period.between(selectedDate,currentDate).getYears();
+            dispAgeLabel.setText(""+resultYear);
     }
     
     AddPatient(){
+        ImageIcon BlackBackGround = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/black.jpg"));
+        JLabel BackGround = new JLabel(BlackBackGround);
+        BackGround.setBounds(0,0,1000,50);
+        add(BackGround);
         
         AddPetientLabel = new JLabel("Add Patient Details");
         AddPetientLabel.setFont(new Font("Times New Roman",Font.PLAIN,30));
-        AddPetientLabel.setBounds(350,0,600,70);
-        add(AddPetientLabel);
+        AddPetientLabel.setBounds(350,0,300,50);
+        AddPetientLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        AddPetientLabel.setForeground(Color.WHITE);
+        BackGround.add(AddPetientLabel);
         
         NameLabel=new JLabel("Name");
         NameLabel.setFont(new Font("Times New Roman",Font.PLAIN,26));
@@ -149,7 +179,6 @@ public class AddPatient extends JFrame implements ActionListener {
         GenderButtonGroup.add(MaleRB);
         GenderButtonGroup.add(FemaleRB);
 
-        
         BirthDateLabel = new JLabel("BirthDate");
         BirthDateLabel.setFont(new Font("Times New Roman",Font.PLAIN,26));
         BirthDateLabel.setBounds(40,180,200,50);
@@ -166,10 +195,16 @@ public class AddPatient extends JFrame implements ActionListener {
         AgeLabel.setBounds(40,240,90,50);
         add(AgeLabel);
         
-        AgeTF = new JTextField();
-        AgeTF.setBounds(250,250,300,30);
-        AgeTF.setFont(new Font("Times New Roman",Font.PLAIN,20));
-        add(AgeTF);
+        dispAgeLabel = new JLabel();
+        dispAgeLabel.setBounds(250,250,50,30);
+        dispAgeLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+        add(dispAgeLabel);
+        
+        CalculateAge = new JButton("Age");
+        CalculateAge.setBounds(480,250,70,30);
+        CalculateAge.addActionListener(this);
+        CalculateAge.setFont(new Font("Times New Roman",Font.PLAIN,20));
+        add(CalculateAge);
         
         BloodGroupLabel = new JLabel("Blood Group");
         BloodGroupLabel.setFont(new Font("Times New Roman",Font.PLAIN,26));
@@ -207,7 +242,7 @@ public class AddPatient extends JFrame implements ActionListener {
         ImageIcon i3 = new ImageIcon(i2);
         
         JLabel img = new JLabel(i3);
-        img.setBounds(650,0,300,300);
+        img.setBounds(650,30,300,300);
         add(img);
         
         SubmitBT = new JButton("Submit");
