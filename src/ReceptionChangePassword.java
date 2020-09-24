@@ -8,9 +8,7 @@ public class ReceptionChangePassword extends JFrame implements ActionListener{
     
     private JLabel l1,l2,l3,l4;
     private JButton b1,b2;
-    private JTextField t1;
     private JPasswordField p1,p2,p3;
-    private JCheckBox c1;
     
     ReceptionChangePassword(){
         
