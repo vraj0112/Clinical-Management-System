@@ -126,6 +126,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             }catch(Exception e){
                 e.printStackTrace();
             }
+            String netTotalPrecision = " ";
             try
             {
                 String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Bill\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
@@ -286,7 +287,8 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                 netAmountDetails.addCell(NetTotalCell);
                 
                 NetTotal=total+consultingFees;
-                String netTotalPrecision = String.format("%.2f",NetTotal);
+                netTotalPrecision = String.format("%.2f",NetTotal);
+                
                 PdfPCell dispNetTotalCell = new PdfPCell();
                 dispNetTotalCell.setPhrase(new Phrase(netTotalPrecision));
                 dispNetTotalCell.setBorder(0);
@@ -336,7 +338,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             try{
                 connection c = new connection();
                 c.createConnection();
-                String stmnt = "Update clinicms.billinfo set nettotal = '"+NetTotal+"' where mobile = '"+MobileNumber+"'";
+                String stmnt = "Update clinicms.billinfo set nettotal = '"+netTotalPrecision+"' where mobile = '"+MobileNumber+"'";
                 c.s.executeUpdate(stmnt);
                 c.disconnectConnection();
             }catch(Exception e){
