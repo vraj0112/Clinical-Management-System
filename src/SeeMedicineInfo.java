@@ -209,6 +209,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                 billDetails.setWidthPercentage(100);
                 billDetails.setWidthPercentage(columnWidth1,ps);
                 String totalPrecision = " ";
+                String[] amountPrecision = new String[50];
                 medicineRowCount = medicineTable.getRowCount();
                 for(int i=0;i<medicineRowCount;i++){
                     PdfPCell MedicineName = new PdfPCell();
@@ -233,10 +234,12 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                     
                     amount[i]=quantity[i]*medicinePrice[i];
                     total=total+amount[i];
+                    
                     totalPrecision = String.format("%.2f",total);
+                    amountPrecision[i] = String.format("%.2f",amount[i]);
                     
                     PdfPCell Amount = new PdfPCell();
-                    Amount.setPhrase(new Phrase(amount[i].toString()));
+                    Amount.setPhrase(new Phrase(amountPrecision[i]));
                     Amount.setHorizontalAlignment(Element.ALIGN_CENTER);
                     Amount.setBorder(0);
                     billDetails.addCell(Amount);
