@@ -210,9 +210,8 @@ public class AddNewMedicine extends JFrame {
         }
         catch(Exception E)
         {
-            
+            E.printStackTrace();
         }
-        
         setSize(700,700);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -254,7 +253,7 @@ public class AddNewMedicine extends JFrame {
                 c.createConnection();
                 String str = "INSERT INTO clinicms.medicineinfo(medicinename,medicinetype,medicineprice) values ('"+medicinename+"','"+medicinetype+"','"+Double.parseDouble(medicineprice)+"')";
                 c.s.executeUpdate(str);
-                JOptionPane.showMessageDialog(null,"New Medicine Added Successfully");
+                JOptionPane.showMessageDialog(null,"New Medicine Added Successfully now Click on Refresh.");
                 medicineTypeCMB.setSelectedIndex(0);
                 medicineTextField.setText("");
                 priceTextField.setText("");
@@ -333,7 +332,6 @@ public class AddNewMedicine extends JFrame {
                 String typeMedicine = (String)medicineTypeCMB.getSelectedItem();
                 String nameMedicine = medicineTextField.getText();
                 String priceMedicine = priceTextField.getText();
-                System.out.println(getMedicineName);
                 try{
                     connection c =new connection();
                     c.createConnection();
