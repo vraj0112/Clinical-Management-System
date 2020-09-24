@@ -26,7 +26,8 @@ public class Doctor extends JFrame implements ActionListener
         }else if(ae.getSource()==PastRecord){
            
         }else if(ae.getSource()==AddReport){
-            
+            new AddReport().setVisible(true);
+            this.setVisible(false);
         }else if(ae.getSource()==ChangePass){
             new DoctorChangePassword().setVisible(true);
         }else if(ae.getSource()==LogOut){
@@ -40,7 +41,7 @@ public class Doctor extends JFrame implements ActionListener
     Doctor()
     {
 
-        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackground.png"));
+        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackGround.png"));
 
         JLabel LeftPenal = new JLabel(Background1);
         LeftPenal.setBounds(5, 5, 298, 435);
