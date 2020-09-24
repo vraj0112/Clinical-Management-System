@@ -7,10 +7,8 @@ import java.sql.*;
 public class ChemistChangePassword extends JFrame implements ActionListener{
     
     private JLabel l1,l2,l3,l4;
-    private JButton b1,b2,showPassword;
-    private JTextField t1;
+    private JButton b1,b2;
     private JPasswordField p1,p2,p3;
-    private JCheckBox c1;
     
     ImageIcon TempImage,showpassword;
     Image temp;
