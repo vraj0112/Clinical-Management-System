@@ -20,13 +20,15 @@ public class SeePatientInfo extends JFrame implements ActionListener {
                 token = tokenTextField.getText();
                 String str = "Select * from appointment where tokenid = '"+token+"'";
                 ResultSet rs = c.s.executeQuery(str);
-                while(rs.next()){
+                if(rs.next()){
                     dispMobileLabel.setText(rs.getString("mobile"));
                     dispNameLabel.setText(rs.getString("name"));
                     dispGenderLabel.setText(rs.getString("gender"));
                     dispBirthLabel.setText(rs.getString("birthdate"));
                     dispAgeLabel.setText(rs.getString("age"));
                     dispBloodLabel.setText(rs.getString("bloodgroup"));
+                }else{
+                    JOptionPane.showMessageDialog(null, "Please Enter Valid Token Number");
                 }
                 c.disconnectConnection();
             }catch(Exception e){
