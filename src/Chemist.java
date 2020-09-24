@@ -22,7 +22,8 @@ public class Chemist extends JFrame implements ActionListener
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==SeeMedicineInfo){
-            
+            new SeeMedicineInfo().setVisible(true);
+            this.setVisible(false);
         }else if(ae.getSource()==AddNewMedicine){
             new AddNewMedicine().setVisible(true);
             this.setVisible(false);
@@ -37,7 +38,7 @@ public class Chemist extends JFrame implements ActionListener
     Chemist()
     {
 
-        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackground.png"));
+        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackGround.png"));
 
         JLabel LeftPenal = new JLabel(Background1);
         LeftPenal.setBounds(5, 5, 298, 435);
