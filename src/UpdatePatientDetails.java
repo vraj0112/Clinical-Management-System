@@ -21,7 +21,7 @@ public class UpdatePatientDetails extends JFrame implements ActionListener {
                 number = t1.getText();
                 String str = "Select * from patientdetails where mobile = '"+number+"'";
                 ResultSet rs = c.s.executeQuery(str);
-                while(rs.next()){
+                if(rs.next()){
                     t3.setText(rs.getString("name"));
                     t2.setText(rs.getString("age"));
                     ta1.setText(rs.getString("address"));
@@ -49,6 +49,8 @@ public class UpdatePatientDetails extends JFrame implements ActionListener {
                     
                     c.disconnectConnection();
                     c = null;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Please Enter Valid Mobile Number");
                 }
             }catch(Exception e){
                 
@@ -93,10 +95,26 @@ public class UpdatePatientDetails extends JFrame implements ActionListener {
     }
     
     UpdatePatientDetails(){
+        
+        ImageIcon BlackBackGround = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/black.jpg"));
+        JLabel BackGround = new JLabel(BlackBackGround);
+        BackGround.setBounds(0,0,1000,50);
+        add(BackGround);
+        
         l0 = new JLabel("Update Patient Details");
         l0.setFont(new Font("Times New Roman",Font.PLAIN,30));
-        l0.setBounds(350,0,600,70);
-        add(l0);
+        l0.setBounds(350,0,300,50);
+        l0.setHorizontalAlignment(SwingConstants.CENTER);
+        l0.setForeground(Color.WHITE);
+        BackGround.add(l0);
+        
+        ImageIcon i01 = new ImageIcon("C:\\Users\\hp\\Desktop\\Vraj Shah\\Vraj138\\Java\\Final Clinincal Management System\\cms\\updateDark.jpg");
+        Image i02 = i01.getImage().getScaledInstance(200,200,Image.SCALE_DEFAULT);
+        ImageIcon i03 = new ImageIcon(i02);
+        
+        JLabel img = new JLabel(i03);
+        img.setBounds(720,80,200,200);
+        add(img);
         
         l1=new JLabel("Mobile Number");
         l1.setFont(new Font("Times New Roman",Font.PLAIN,26));
@@ -163,9 +181,10 @@ public class UpdatePatientDetails extends JFrame implements ActionListener {
         l7.setBounds(40,360,200,50);
         add(l7);
         
-        ta1=new JTextArea(200,200);
+        ta1=new JTextArea();
         ta1.setFont(new Font("Times New Roman",Font.PLAIN,20));
         ta1.setBounds(250,370,300,100);
+        ta1.setLineWrap(true);
         add(ta1);
         
         b2=new JButton("Update Patient Details");
