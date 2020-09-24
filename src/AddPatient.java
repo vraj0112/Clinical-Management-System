@@ -233,6 +233,7 @@ public class AddPatient extends JFrame implements ActionListener {
         add(AddressLabel);
         
         AddressTA = new JTextArea();
+        AddressTA.setLineWrap(true);
         AddressTA.setFont(new Font("Times New Roman",Font.PLAIN,20));
         AddressTA.setBounds(250,430,300,100);
         add(AddressTA);
