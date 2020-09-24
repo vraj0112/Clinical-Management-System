@@ -1,6 +1,6 @@
 create database clinicms;
 use clinicms;
-create table clinicms.appointment (tokenid int, mobile varchar(12), name varchar(40), gender enum('M','F') , age int);
+create table clinicms.appointment (tokenid int, mobile varchar(12), name varchar(40), gender enum('M','F') ,birthdate varchar(12), age int,bloodgroup ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'));
 ALTER TABLE `clinicms`.`appointment` 
 CHANGE COLUMN `tokenid` `tokenid` INT NOT NULL AUTO_INCREMENT ,
 ADD PRIMARY KEY (`tokenid`);
@@ -45,3 +45,15 @@ CHANGE COLUMN `mobile` `mobile` VARCHAR(11) NOT NULL ,
 ADD PRIMARY KEY (`mobile`),
 ADD UNIQUE INDEX `mobile_UNIQUE` (`mobile` ASC) VISIBLE;
 ;
+
+create table clinicms.billinfo(
+billno int NOT NULL AUTO_INCREMENT,
+mobile varchar(12),
+nettotal double,
+PRIMARY KEY(billno)
+);
+
+alter table clinicms.billinfo auto_increment=100100;
+
+ALTER TABLE `clinicms`.`billinfo` 
+ADD COLUMN `date` VARCHAR(10) NOT NULL AFTER `nettotal`;
