@@ -39,7 +39,7 @@ values
 ('Volini 15gm', 'Ointment', '48'),
 ('Zecuf 100ml', 'Syrup', '95.34');
 
-create table clinicms.patientdetails (mobile varchar(11), name varchar(40), gender enum('M','F'), age int, birthdate varchar(12), bloodgroup ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'), address varchar(60));
+create table clinicms.patientdetails (mobile varchar(11), name varchar(40), gender enum('M','F'), age int, birthdate varchar(12), bloodgroup ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'), address varchar(100));
 ALTER TABLE `clinicms`.`patientdetails` 
 CHANGE COLUMN `mobile` `mobile` VARCHAR(11) NOT NULL ,
 ADD PRIMARY KEY (`mobile`),
