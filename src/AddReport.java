@@ -74,10 +74,6 @@ public class AddReport extends JFrame implements ActionListener
             }catch(Exception e){
                 e.printStackTrace();
             }
-        }else if(ae.getSource()==Add){
-            
-        }else if(ae.getSource()==Reset){
-            
         }else if(ae.getSource()==Back){
             new Doctor().setVisible(true);
             this.setVisible(false);
@@ -315,7 +311,7 @@ public class AddReport extends JFrame implements ActionListener
         PrecautionsLabel.setBounds(20,30,120,30);
         addOthers.add(PrecautionsLabel);
         
-        PrecautionsText = new JTextField();
+        PrecautionsText = new JTextField("Null");
         PrecautionsText.setFont(new Font("Times New Roman",Font.PLAIN,20));
         PrecautionsText.setBounds(150,30,400,30);
         addOthers.add(PrecautionsText);
@@ -325,7 +321,7 @@ public class AddReport extends JFrame implements ActionListener
         AllergyLabel.setBounds(20,90,120,30);
         addOthers.add(AllergyLabel);
         
-        AllergyText = new JTextField();
+        AllergyText = new JTextField("Null");
         AllergyText.setFont(new Font("Times New Roman",Font.PLAIN,20));
         AllergyText.setBounds(150,90,400,30);
         addOthers.add(AllergyText);
@@ -335,7 +331,7 @@ public class AddReport extends JFrame implements ActionListener
         DiseaseLabel.setBounds(20,150,400,30);
         addOthers.add(DiseaseLabel);
         
-        DiseaseTF = new JTextField();
+        DiseaseTF = new JTextField("Null");
         DiseaseTF.setFont(new Font("Times New Roman",Font.PLAIN,20));
         DiseaseTF.setBounds(150,150,400,30);
         addOthers.add(DiseaseTF);
@@ -636,349 +632,363 @@ public class AddReport extends JFrame implements ActionListener
                 MedicineNameCMB.addItem(ListItem);                    
             }
         }
-        catch(Exception E){}
+        catch(Exception E){
+            
+        }
     }
     
     public void AddactionPerformed(ActionEvent e)
     {
-        connection c = new connection();
-        c.createConnection();
+        String nameCheck=dispname.getText();
+        if(nameCheck.equals("")){
+            JOptionPane.showMessageDialog(null,"You must have to Search correct Token first.");
+        }
+        else{
+            connection c = new connection();
+            c.createConnection();
         
-        try
-        {
-            String allData = "select * from clinicms.patientdetails where mobile = '" + MobileNumber + "'";
-            ResultSet rs = c.s.executeQuery(allData);
-            rs.next();
-            
-            String Gender = rs.getString("gender");
-            String Age = rs.getString("age");
-            
-            rs = null;
-            
-            String PathName = "F:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
-            Document doc = new Document();
-            PdfWriter.getInstance(doc, new FileOutputStream(PathName));
-            doc.setMargins(20f,20f,5f,5f);
-            doc.open();
- 
-            com.itextpdf.text.Font HeadingFont =  FontFactory.getFont(FontFactory.TIMES,32f,Font.BOLD, BaseColor.RED);
-            Paragraph Heading = new Paragraph("Clinical Management System",HeadingFont);
-            Heading.setAlignment(Element.ALIGN_CENTER);
-            doc.add(Heading);
-
-            doc.add(new Paragraph(" "));
-            com.itextpdf.text.Rectangle ps = doc.getPageSize();
-            System.out.println(ps);
-            Paragraph HorizontalLine = new Paragraph("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            doc.add(HorizontalLine);
-
-                              
-            PdfPTable info = new PdfPTable(2);
-            info.setWidthPercentage(100);
-            float []columnwidth = {400f,195f};
-            info.setWidthPercentage(columnwidth, ps);
-            PdfPCell PetientNameCell = new PdfPCell();
-            PetientNameCell.setPhrase(new Phrase("Name    : " + dispname.getText()));
-            PetientNameCell.setBorder(0);
-            info.addCell(PetientNameCell);
-            
-            PdfPCell DateCell = new PdfPCell();
-            DateCell.setPhrase(new Phrase("Date : " + " "+dd+"/"+mm+"/"+yyyy));
-            DateCell.setBorder(0);
-            info.addCell(DateCell);
-            
-            PdfPCell GenderCell = new PdfPCell();
-            GenderCell.setPhrase(new Phrase("Gender : " + Gender));
-            GenderCell.setBorder(0);
-            info.addCell(GenderCell);
-            
-            PdfPCell AgeCell = new PdfPCell();
-            AgeCell.setPhrase(new Phrase("Age : " +Age));
-            AgeCell.setBorder(0);
-            info.addCell(AgeCell);
-
-            doc.add(info);
-            doc.add(HorizontalLine);
-            
-            doc.add(new Paragraph(" "));
-            
-            com.itextpdf.text.Font TableTitleFont =  FontFactory.getFont(FontFactory.TIMES,16f,Font.BOLD, BaseColor.DARK_GRAY);
-            Paragraph SymptomTableTitle = new Paragraph(": Symptoms :",TableTitleFont);
-            SymptomTableTitle.setAlignment(Element.ALIGN_CENTER);
-            doc.add(SymptomTableTitle);
-            
-            doc.add(new Paragraph(" "));
-            
-            PdfPTable SymptomsTable = new PdfPTable(3);
-            SymptomsTable.setWidthPercentage(100);
-            
-            PdfPCell SymptomNameTitle = new PdfPCell();
-            SymptomNameTitle.setPhrase(new Phrase("Symptom"));
-            SymptomNameTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            SymptomsTable.addCell(SymptomNameTitle);
-
-            PdfPCell EffectLevelTitle = new PdfPCell();
-            EffectLevelTitle.setPhrase(new Phrase("EffectLevel"));
-            EffectLevelTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            SymptomsTable.addCell(EffectLevelTitle);
-
-            PdfPCell OtherNotesTitle = new PdfPCell();
-            OtherNotesTitle.setPhrase(new Phrase("Other"));
-            OtherNotesTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            SymptomsTable.addCell(OtherNotesTitle);
-            
-            PdfPCell SymptomNametemp = new PdfPCell();
-            SymptomNametemp.setPhrase(new Phrase(" "));
-            SymptomNametemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            SymptomNametemp.setBorder(0);
-            SymptomsTable.addCell(SymptomNametemp);
-
-            PdfPCell EffectLeveltemp = new PdfPCell();
-            EffectLeveltemp.setPhrase(new Phrase(" "));
-            EffectLeveltemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            EffectLeveltemp.setBorder(0);
-            SymptomsTable.addCell(EffectLeveltemp);
-
-            PdfPCell OtherNotestemp = new PdfPCell();
-            OtherNotestemp.setPhrase(new Phrase(" "));
-            OtherNotestemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            OtherNotestemp.setBorder(0);
-            SymptomsTable.addCell(OtherNotestemp);
-            
-            int symptomsRowCount = symptomsTable.getRowCount();
-            for(int i=0;i<symptomsRowCount ; i++)
+            try
             {
-                PdfPCell SymptomName = new PdfPCell();
-                SymptomName.setPhrase(new Phrase((String) SymptomsTableModel.getValueAt(i, 0)));
-                SymptomName.setHorizontalAlignment(Element.ALIGN_CENTER);
-                SymptomsTable.addCell(SymptomName);
-                
-                PdfPCell EffectLevel = new PdfPCell();
-                EffectLevel.setPhrase(new Phrase((String)SymptomsTableModel.getValueAt(i, 1)));
-                EffectLevel.setHorizontalAlignment(Element.ALIGN_CENTER);
-                SymptomsTable.addCell(EffectLevel);
-                
-                PdfPCell OtherNotes = new PdfPCell();
-                OtherNotes.setPhrase(new Phrase((String)SymptomsTableModel.getValueAt(i, 2)));
-                OtherNotes.setHorizontalAlignment(Element.ALIGN_CENTER);
-                SymptomsTable.addCell(OtherNotes);
-            }
-            doc.add(SymptomsTable);
+                String allData = "select * from clinicms.patientdetails where mobile = '" + MobileNumber + "'";
+                ResultSet rs = c.s.executeQuery(allData);
+                rs.next();
             
-            doc.add(new Paragraph(" "));
-            
-            Paragraph MedicineTableTitle = new Paragraph(": Medicines :",TableTitleFont);
-            MedicineTableTitle.setAlignment(Element.ALIGN_CENTER);
-            doc.add(MedicineTableTitle);
-            
-            doc.add(new Paragraph(" "));
-            
-            PdfPTable MedicinesTable = new PdfPTable(8);
-            MedicinesTable.setWidthPercentage(100);
-            float []medicinecolumnwidth = {200f,75f,50f,50f,50f,50f,50f,50f};
-            MedicinesTable.setWidthPercentage(medicinecolumnwidth, ps);
-       
-            PdfPCell MedicineNameTitle = new PdfPCell();
-            MedicineNameTitle.setPhrase(new Phrase("Medicine Name"));
-            MedicineNameTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(MedicineNameTitle);
+                String Gender = rs.getString("gender");
+                String Age = rs.getString("age");
 
-            PdfPCell MedicineTypeTitle = new PdfPCell();
-            MedicineTypeTitle.setPhrase(new Phrase("Medicine Type"));
-            MedicineTypeTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(MedicineTypeTitle);
+                rs = null;
 
-            PdfPCell DosageTitle = new PdfPCell();
-            DosageTitle.setPhrase(new Phrase("Dosage"));
-            DosageTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(DosageTitle);
-        
-            PdfPCell MorningTitle = new PdfPCell();
-            MorningTitle.setPhrase(new Phrase("Morning"));
-            MorningTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(MorningTitle);
-            
-            PdfPCell NoonTitle = new PdfPCell();
-            NoonTitle.setPhrase(new Phrase("Noon"));
-            NoonTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(NoonTitle);
-            
-            PdfPCell EveningTitle = new PdfPCell();
-            EveningTitle.setPhrase(new Phrase("Evening"));
-            EveningTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(EveningTitle);
-            
-            PdfPCell B_A_MealTitle = new PdfPCell();
-            B_A_MealTitle.setPhrase(new Phrase("B/A Meal"));
-            B_A_MealTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(B_A_MealTitle);
-            
-            PdfPCell QuantityTitle = new PdfPCell();
-            QuantityTitle.setPhrase(new Phrase("Quantity"));
-            QuantityTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicinesTable.addCell(QuantityTitle);
-            
-            PdfPCell MedicineNametemp = new PdfPCell();
-            MedicineNametemp.setPhrase(new Phrase(" "));
-            MedicineNametemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicineNametemp.setBorder(0);
-            MedicinesTable.addCell(MedicineNametemp);
+                String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
+                Document doc = new Document();
+                PdfWriter.getInstance(doc, new FileOutputStream(PathName));
+                doc.setMargins(20f,20f,5f,5f);
+                doc.open();
 
-            PdfPCell MedicineTypeTemp = new PdfPCell();
-            MedicineTypeTemp.setPhrase(new Phrase(""));
-            MedicineTypeTemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            MedicineTypeTemp.setBorder(0);
-            MedicinesTable.addCell(MedicineTypeTemp);
+                com.itextpdf.text.Font HeadingFont =  FontFactory.getFont(FontFactory.TIMES,32f,Font.BOLD, BaseColor.RED);
+                Paragraph Heading = new Paragraph("Clinical Management System",HeadingFont);
+                Heading.setAlignment(Element.ALIGN_CENTER);
+                doc.add(Heading);
 
-            PdfPCell Dosagetemp = new PdfPCell();
-            Dosagetemp.setPhrase(new Phrase(" "));
-            Dosagetemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Dosagetemp.setBorder(0);
-            MedicinesTable.addCell(Dosagetemp);
-        
-            PdfPCell Morningtemp  = new PdfPCell();
-            Morningtemp.setPhrase(new Phrase(" "));
-            Morningtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Morningtemp.setBorder(0);
-            MedicinesTable.addCell(Morningtemp);
-            
-            PdfPCell Noontemp = new PdfPCell();
-            Noontemp.setPhrase(new Phrase(" "));
-            Noontemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Noontemp.setBorder(0);
-            MedicinesTable.addCell(Noontemp);
-            
-            PdfPCell Eveningtemp = new PdfPCell();
-            Eveningtemp.setPhrase(new Phrase(" "));
-            Eveningtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Eveningtemp.setBorder(0);
-            MedicinesTable.addCell(Eveningtemp);
-            
-            PdfPCell B_A_Mealtemp = new PdfPCell();
-            B_A_Mealtemp.setPhrase(new Phrase(" "));
-            B_A_Mealtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            B_A_Mealtemp.setBorder(0);
-            MedicinesTable.addCell(B_A_Mealtemp);
-            
-            PdfPCell Quantitytemp = new PdfPCell();
-            Quantitytemp.setPhrase(new Phrase(" "));
-            Quantitytemp.setHorizontalAlignment(Element.ALIGN_CENTER);
-            Quantitytemp.setBorder(0);
-            MedicinesTable.addCell(Quantitytemp);
-            
-            int medicinesRowCount = medicineTable.getRowCount();
-            for(int i=0;i<medicinesRowCount ; i++)
-            {
-                PdfPCell MedicineName = new PdfPCell();
-                MedicineName.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 0)));
-                MedicineName.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(MedicineName);
+                doc.add(new Paragraph(" "));
+                com.itextpdf.text.Rectangle ps = doc.getPageSize();
+                Paragraph HorizontalLine = new Paragraph("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                doc.add(HorizontalLine);
 
-                PdfPCell MedicineType = new PdfPCell();
-                MedicineTypeTitle.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 1)));
+
+                PdfPTable info = new PdfPTable(2);
+                info.setWidthPercentage(100);
+                float []columnwidth = {400f,195f};
+                info.setWidthPercentage(columnwidth, ps);
+                PdfPCell PetientNameCell = new PdfPCell();
+                PetientNameCell.setPhrase(new Phrase("Name    : " + dispname.getText()));
+                PetientNameCell.setBorder(0);
+                info.addCell(PetientNameCell);
+
+                PdfPCell DateCell = new PdfPCell();
+                DateCell.setPhrase(new Phrase("Date : " + " "+dd+"/"+mm+"/"+yyyy));
+                DateCell.setBorder(0);
+                info.addCell(DateCell);
+
+                PdfPCell GenderCell = new PdfPCell();
+                GenderCell.setPhrase(new Phrase("Gender : " + Gender));
+                GenderCell.setBorder(0);
+                info.addCell(GenderCell);
+
+                PdfPCell AgeCell = new PdfPCell();
+                AgeCell.setPhrase(new Phrase("Age : " +Age));
+                AgeCell.setBorder(0);
+                info.addCell(AgeCell);
+
+                doc.add(info);
+                doc.add(HorizontalLine);
+
+                doc.add(new Paragraph(" "));
+
+                com.itextpdf.text.Font TableTitleFont =  FontFactory.getFont(FontFactory.TIMES,16f,Font.BOLD, BaseColor.DARK_GRAY);
+                Paragraph SymptomTableTitle = new Paragraph(": Symptoms :",TableTitleFont);
+                SymptomTableTitle.setAlignment(Element.ALIGN_CENTER);
+                doc.add(SymptomTableTitle);
+
+                doc.add(new Paragraph(" "));
+
+                PdfPTable SymptomsTable = new PdfPTable(3);
+                SymptomsTable.setWidthPercentage(100);
+
+                PdfPCell SymptomNameTitle = new PdfPCell();
+                SymptomNameTitle.setPhrase(new Phrase("Symptom"));
+                SymptomNameTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                SymptomsTable.addCell(SymptomNameTitle);
+
+                PdfPCell EffectLevelTitle = new PdfPCell();
+                EffectLevelTitle.setPhrase(new Phrase("EffectLevel"));
+                EffectLevelTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                SymptomsTable.addCell(EffectLevelTitle);
+
+                PdfPCell OtherNotesTitle = new PdfPCell();
+                OtherNotesTitle.setPhrase(new Phrase("Other"));
+                OtherNotesTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                SymptomsTable.addCell(OtherNotesTitle);
+
+                PdfPCell SymptomNametemp = new PdfPCell();
+                SymptomNametemp.setPhrase(new Phrase(" "));
+                SymptomNametemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                SymptomNametemp.setBorder(0);
+                SymptomsTable.addCell(SymptomNametemp);
+
+                PdfPCell EffectLeveltemp = new PdfPCell();
+                EffectLeveltemp.setPhrase(new Phrase(" "));
+                EffectLeveltemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                EffectLeveltemp.setBorder(0);
+                SymptomsTable.addCell(EffectLeveltemp);
+
+                PdfPCell OtherNotestemp = new PdfPCell();
+                OtherNotestemp.setPhrase(new Phrase(" "));
+                OtherNotestemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                OtherNotestemp.setBorder(0);
+                SymptomsTable.addCell(OtherNotestemp);
+
+                int symptomsRowCount = symptomsTable.getRowCount();
+                for(int i=0;i<symptomsRowCount ; i++)
+                {
+                    PdfPCell SymptomName = new PdfPCell();
+                    SymptomName.setPhrase(new Phrase((String) SymptomsTableModel.getValueAt(i, 0)));
+                    SymptomName.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    SymptomsTable.addCell(SymptomName);
+
+                    PdfPCell EffectLevel = new PdfPCell();
+                    EffectLevel.setPhrase(new Phrase((String)SymptomsTableModel.getValueAt(i, 1)));
+                    EffectLevel.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    SymptomsTable.addCell(EffectLevel);
+
+                    PdfPCell OtherNotes = new PdfPCell();
+                    OtherNotes.setPhrase(new Phrase((String)SymptomsTableModel.getValueAt(i, 2)));
+                    OtherNotes.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    SymptomsTable.addCell(OtherNotes);
+                }
+                doc.add(SymptomsTable);
+
+                doc.add(new Paragraph(" "));
+
+                Paragraph MedicineTableTitle = new Paragraph(": Medicines :",TableTitleFont);
+                MedicineTableTitle.setAlignment(Element.ALIGN_CENTER);
+                doc.add(MedicineTableTitle);
+
+                doc.add(new Paragraph(" "));
+
+                PdfPTable MedicinesTable = new PdfPTable(8);
+                MedicinesTable.setWidthPercentage(100);
+                float []medicinecolumnwidth = {200f,75f,50f,50f,50f,50f,50f,50f};
+                MedicinesTable.setWidthPercentage(medicinecolumnwidth, ps);
+
+                PdfPCell MedicineNameTitle = new PdfPCell();
+                MedicineNameTitle.setPhrase(new Phrase("Medicine Name"));
+                MedicineNameTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(MedicineNameTitle);
+
+                PdfPCell MedicineTypeTitle = new PdfPCell();
+                MedicineTypeTitle.setPhrase(new Phrase("Medicine Type"));
                 MedicineTypeTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
                 MedicinesTable.addCell(MedicineTypeTitle);
 
-                PdfPCell Dosage = new PdfPCell();
-                Dosage.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 2)));
-                Dosage.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(Dosage);
+                PdfPCell DosageTitle = new PdfPCell();
+                DosageTitle.setPhrase(new Phrase("Dosage"));
+                DosageTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(DosageTitle);
 
-                PdfPCell Morning = new PdfPCell();
-                Morning.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 3)));
-                Morning.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(Morning);
+                PdfPCell MorningTitle = new PdfPCell();
+                MorningTitle.setPhrase(new Phrase("Morning"));
+                MorningTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(MorningTitle);
 
-                PdfPCell Noon = new PdfPCell();
-                Noon.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 4)));
-                Noon.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(Noon);
+                PdfPCell NoonTitle = new PdfPCell();
+                NoonTitle.setPhrase(new Phrase("Noon"));
+                NoonTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(NoonTitle);
 
-                PdfPCell Evening = new PdfPCell();
-                Evening.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 5)));
-                Evening.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(Evening);
+                PdfPCell EveningTitle = new PdfPCell();
+                EveningTitle.setPhrase(new Phrase("Evening"));
+                EveningTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(EveningTitle);
 
-                PdfPCell B_A_Meal = new PdfPCell();
-                B_A_Meal.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 6)));
-                B_A_Meal.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(B_A_Meal);
+                PdfPCell B_A_MealTitle = new PdfPCell();
+                B_A_MealTitle.setPhrase(new Phrase("B/A Meal"));
+                B_A_MealTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(B_A_MealTitle);
 
-                PdfPCell Quantity= new PdfPCell();
-                Quantity.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 7)));
-                Quantity.setHorizontalAlignment(Element.ALIGN_CENTER);
-                MedicinesTable.addCell(Quantity);
+                PdfPCell QuantityTitle = new PdfPCell();
+                QuantityTitle.setPhrase(new Phrase("Quantity"));
+                QuantityTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicinesTable.addCell(QuantityTitle);
+
+                PdfPCell MedicineNametemp = new PdfPCell();
+                MedicineNametemp.setPhrase(new Phrase(" "));
+                MedicineNametemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicineNametemp.setBorder(0);
+                MedicinesTable.addCell(MedicineNametemp);
+
+                PdfPCell MedicineTypeTemp = new PdfPCell();
+                MedicineTypeTemp.setPhrase(new Phrase(""));
+                MedicineTypeTemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                MedicineTypeTemp.setBorder(0);
+                MedicinesTable.addCell(MedicineTypeTemp);
+
+                PdfPCell Dosagetemp = new PdfPCell();
+                Dosagetemp.setPhrase(new Phrase(" "));
+                Dosagetemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                Dosagetemp.setBorder(0);
+                MedicinesTable.addCell(Dosagetemp);
+
+                PdfPCell Morningtemp  = new PdfPCell();
+                Morningtemp.setPhrase(new Phrase(" "));
+                Morningtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                Morningtemp.setBorder(0);
+                MedicinesTable.addCell(Morningtemp);
+
+                PdfPCell Noontemp = new PdfPCell();
+                Noontemp.setPhrase(new Phrase(" "));
+                Noontemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                Noontemp.setBorder(0);
+                MedicinesTable.addCell(Noontemp);
+
+                PdfPCell Eveningtemp = new PdfPCell();
+                Eveningtemp.setPhrase(new Phrase(" "));
+                Eveningtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                Eveningtemp.setBorder(0);
+                MedicinesTable.addCell(Eveningtemp);
+
+                PdfPCell B_A_Mealtemp = new PdfPCell();
+                B_A_Mealtemp.setPhrase(new Phrase(" "));
+                B_A_Mealtemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                B_A_Mealtemp.setBorder(0);
+                MedicinesTable.addCell(B_A_Mealtemp);
+
+                PdfPCell Quantitytemp = new PdfPCell();
+                Quantitytemp.setPhrase(new Phrase(" "));
+                Quantitytemp.setHorizontalAlignment(Element.ALIGN_CENTER);
+                Quantitytemp.setBorder(0);
+                MedicinesTable.addCell(Quantitytemp);
+
+                int medicinesRowCount = medicineTable.getRowCount();
+                for(int i=0;i<medicinesRowCount ; i++)
+                {
+                    PdfPCell MedicineName = new PdfPCell();
+                    MedicineName.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 0)));
+                    MedicineName.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(MedicineName);
+
+                    PdfPCell medicineType = new PdfPCell();
+                    medicineType.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 1)));
+                    medicineType.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(medicineType);
+
+                    PdfPCell Dosage = new PdfPCell();
+                    Dosage.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 2)));
+                    Dosage.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(Dosage);
+
+                    PdfPCell Morning = new PdfPCell();
+                    Morning.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 3)));
+                    Morning.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(Morning);
+
+                    PdfPCell Noon = new PdfPCell();
+                    Noon.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 4)));
+                    Noon.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(Noon);
+
+                    PdfPCell Evening = new PdfPCell();
+                    Evening.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 5)));
+                    Evening.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(Evening);
+
+                    PdfPCell B_A_Meal = new PdfPCell();
+                    B_A_Meal.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 6)));
+                    B_A_Meal.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(B_A_Meal);
+
+                    PdfPCell Quantity= new PdfPCell();
+                    Quantity.setPhrase(new Phrase((String)MedicineTableModel.getValueAt(i, 7)));
+                    Quantity.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    MedicinesTable.addCell(Quantity);
+                }
+
+                doc.add(MedicinesTable);
+
+                doc.add(new Paragraph(" "));
+
+                com.itextpdf.text.Font OtherThingsFont =  FontFactory.getFont(FontFactory.TIMES,16f,Font.BOLD, BaseColor.DARK_GRAY);
+                Paragraph PrecautionsTitle = new Paragraph("Precautions : ", OtherThingsFont);
+                Paragraph Precautions = new Paragraph(PrecautionsText.getText());
+                Precautions.setAlignment(Element.ALIGN_JUSTIFIED);
+
+                doc.add(PrecautionsTitle);
+                doc.add(Precautions);
+
+                doc.add(new Paragraph(" "));
+
+                Paragraph AllergyTitle = new Paragraph("Allergy : ", OtherThingsFont);
+                Paragraph Allergy = new Paragraph(AllergyText.getText());
+                Allergy.setAlignment(Element.ALIGN_JUSTIFIED);
+
+                doc.add(AllergyTitle);
+                doc.add(Allergy);
+
+                doc.add(new Paragraph(" "));
+
+                Paragraph DiseaseTitle = new Paragraph("Disease : ", OtherThingsFont);
+                Paragraph Disease = new Paragraph(DiseaseTF.getText());
+                Disease.setAlignment(Element.ALIGN_JUSTIFIED);
+
+                doc.add(DiseaseTitle);
+                doc.add(Disease); 
+
+                doc.close();
+
+            }
+            catch(Exception E){
+                E.printStackTrace();
             }
 
-            doc.add(MedicinesTable);
-            
-            doc.add(new Paragraph(" "));
-            
-            com.itextpdf.text.Font OtherThingsFont =  FontFactory.getFont(FontFactory.TIMES,16f,Font.BOLD, BaseColor.DARK_GRAY);
-            Paragraph PrecautionsTitle = new Paragraph("Precautions : ", OtherThingsFont);
-            Paragraph Precautions = new Paragraph(PrecautionsText.getText());
-            Precautions.setAlignment(Element.ALIGN_JUSTIFIED);
-            
-            doc.add(PrecautionsTitle);
-            doc.add(Precautions);
-            
-            doc.add(new Paragraph(" "));
-            
-            Paragraph AllergyTitle = new Paragraph("Allergy : ", OtherThingsFont);
-            Paragraph Allergy = new Paragraph(AllergyText.getText());
-            Allergy.setAlignment(Element.ALIGN_JUSTIFIED);
-            
-            doc.add(AllergyTitle);
-            doc.add(Allergy);
-            
-            doc.add(new Paragraph(" "));
-            
-            Paragraph DiseaseTitle = new Paragraph("Disease : ", OtherThingsFont);
-            Paragraph Disease = new Paragraph(DiseaseTF.getText());
-            Disease.setAlignment(Element.ALIGN_JUSTIFIED);
-            
-            doc.add(DiseaseTitle);
-            doc.add(Disease); 
-
-            doc.close();
-
-        }
-        catch(Exception E){}
-        
-
-       
-        try
-        {
-                    
-            Precautions = PrecautionsText.getText();
-            Allergy = AllergyText.getText();
-            Disease = DiseaseTF.getText();
-
-            String AddTime ="insert into patient" + MobileNumber + ".time_record  (dd,mm,yyyy,hh,mt,Precautions,Allergies,Disease) value ('" +dd+ "','" +mm+ "','" +yyyy+ "','" +hh+ "','" +mt+ "','" +Precautions+ "','" +Allergy+ "','" +Disease+ "')";
-            c.s.executeUpdate(AddTime);
-                      
-            String Create_Symptoms_Table = "create table patient" + MobileNumber + ".S_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (symptomname varchar(20), effectlevel varchar(15), othernotes varchar(30))";
-            String Create_Medicines_Table = "create table patient" + MobileNumber + ".M_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (medicinename varchar(30), medicinetype varchar(15), dosage varchar(10), inmorning enum('Yes','No'), innoon enum('Yes','No'), inevening enum('Yes','No'), b_a_meal enum('Before Meal','After meal'), quantity varchar(10))";
-            c.s.executeUpdate(Create_Symptoms_Table);
-            c.s.executeUpdate(Create_Medicines_Table);
-            
-            int medicineRowCount = medicineTable.getRowCount();
-            for(int i=0 ; i<medicineRowCount ; i++)
+            try
             {
-                String value = "insert into patient"+MobileNumber+".M_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (medicinename , medicinetype , dosage , inmorning, innoon, inevening, b_a_meal, quantity) value('"+(String)MedicineTableModel.getValueAt(i, 0)+"','"+(String)MedicineTableModel.getValueAt(i, 1)+"','"+(String)MedicineTableModel.getValueAt(i, 2)+"','"+(String)MedicineTableModel.getValueAt(i, 3)+"','"+(String)MedicineTableModel.getValueAt(i, 4)+"','"+(String)MedicineTableModel.getValueAt(i, 5)+"','"+(String)MedicineTableModel.getValueAt(i, 6)+"','"+(String)MedicineTableModel.getValueAt(i, 7)+"')";
-                c.s.executeUpdate(value);
+
+                Precautions = PrecautionsText.getText();
+                Allergy = AllergyText.getText();
+                Disease = DiseaseTF.getText();
+
+                String AddTime ="insert into patient" + MobileNumber + ".time_record  (dd,mm,yyyy,hh,mt,Precautions,Allergies,Disease) value ('" +dd+ "','" +mm+ "','" +yyyy+ "','" +hh+ "','" +mt+ "','" +Precautions+ "','" +Allergy+ "','" +Disease+ "')";
+                c.s.executeUpdate(AddTime);
+
+                String Create_Symptoms_Table = "create table patient" + MobileNumber + ".S_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (symptomname varchar(20), effectlevel varchar(15), othernotes varchar(30))";
+                String Create_Medicines_Table = "create table patient" + MobileNumber + ".M_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (medicinename varchar(30), medicinetype varchar(15), dosage varchar(10), inmorning enum('Yes','No'), innoon enum('Yes','No'), inevening enum('Yes','No'), b_a_meal enum('Before Meal','After meal'), quantity varchar(10))";
+                c.s.executeUpdate(Create_Symptoms_Table);
+                c.s.executeUpdate(Create_Medicines_Table);
+
+                int medicineRowCount = medicineTable.getRowCount();
+                for(int i=0 ; i<medicineRowCount ; i++)
+                {
+                    String value = "insert into patient"+MobileNumber+".M_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (medicinename , medicinetype , dosage , inmorning, innoon, inevening, b_a_meal, quantity) value('"+(String)MedicineTableModel.getValueAt(i, 0)+"','"+(String)MedicineTableModel.getValueAt(i, 1)+"','"+(String)MedicineTableModel.getValueAt(i, 2)+"','"+(String)MedicineTableModel.getValueAt(i, 3)+"','"+(String)MedicineTableModel.getValueAt(i, 4)+"','"+(String)MedicineTableModel.getValueAt(i, 5)+"','"+(String)MedicineTableModel.getValueAt(i, 6)+"','"+(String)MedicineTableModel.getValueAt(i, 7)+"')";
+                    c.s.executeUpdate(value);
+                }
+
+                int symptomsRowCount = symptomsTable.getRowCount();
+                for(int i=0;i<symptomsRowCount ; i++)
+                {
+                    String value = "insert into patient"+MobileNumber+".S_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (symptomname, effectlevel, othernotes) value('"+SymptomsTableModel.getValueAt(i, 0)+"','"+SymptomsTableModel.getValueAt(i, 1)+"','"+SymptomsTableModel.getValueAt(i, 2)+"')";
+                    c.s.executeUpdate(value);
+                }  
+                JOptionPane.showMessageDialog(null,"Report Added Successfully.");
+                MedicineTableModel.setRowCount(0);
+                SymptomsTableModel.setRowCount(0);        
+                PrecautionsText.setText("Null");
+                AllergyText.setText("Null");
+                DiseaseTF.setText("Null");
             }
-            
-            int symptomsRowCount = symptomsTable.getRowCount();
-            for(int i=0;i<symptomsRowCount ; i++)
+            catch(Exception E)
             {
-                String value = "insert into patient"+MobileNumber+".S_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (symptomname, effectlevel, othernotes) value('"+SymptomsTableModel.getValueAt(i, 0)+"','"+SymptomsTableModel.getValueAt(i, 1)+"','"+SymptomsTableModel.getValueAt(i, 2)+"')";
-                c.s.executeUpdate(value);
-            }  
-            JOptionPane.showMessageDialog(null,"Done");
+                E.printStackTrace();
+            }
         }
-        catch(Exception E)
-        {}
     }
     
     public void InsertMedactionPerformed(ActionEvent e)
@@ -1257,20 +1267,11 @@ public class AddReport extends JFrame implements ActionListener
         dispname.setText("");
         resetsymptomsFields();
         resetMedicineFileds();
-        int medicineRowCount = medicineTable.getRowCount();
-        for(int i=0 ; i<medicineRowCount ; i++)
-        {
-            MedicineTableModel.removeRow(i);
-        }
-        int symptomsRowCount = symptomsTable.getRowCount();
-        for(int i=0 ; i<symptomsRowCount ; i++)
-        {
-            SymptomsTableModel.removeRow(i);
-        }
-        
-        PrecautionsText.setText("");
-        AllergyText.setText("");
-        DiseaseTF.setText("");
+        MedicineTableModel.setRowCount(0);
+        SymptomsTableModel.setRowCount(0);        
+        PrecautionsText.setText("Null");
+        AllergyText.setText("Null");
+        DiseaseTF.setText("Null");
     }
     
     public void searchTokenactionPerformed(ActionEvent e)
@@ -1303,8 +1304,4 @@ public class AddReport extends JFrame implements ActionListener
         new AddReport();
     }
 
-    private PdfPTable PdfPTable(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
