@@ -43,7 +43,7 @@ public class Reception extends JFrame implements ActionListener
     
     Reception()
     {
-        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackground.png"));
+        Background1 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackGround.png"));
 
         JLabel LeftPenal = new JLabel(Background1);
         LeftPenal.setBounds(5, 5, 298, 435);
