@@ -21,7 +21,7 @@ public class AboutUs extends JFrame implements ActionListener{
     
     AboutUs(){
         
-        ImageIcon i20 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/back.png"));
+        ImageIcon i20 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/Back.png"));
         Image i21 = i20.getImage().getScaledInstance(25,25,Image.SCALE_DEFAULT);
         ImageIcon i22 = new ImageIcon(i21);
         
