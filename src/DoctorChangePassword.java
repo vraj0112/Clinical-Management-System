@@ -8,9 +8,7 @@ public class DoctorChangePassword extends JFrame implements ActionListener{
     
     private JLabel l1,l2,l3,l4;
     private JButton b1,b2;
-    private JTextField t1;
     private JPasswordField p1,p2,p3;
-    private JCheckBox c1;
     
     DoctorChangePassword(){
         
@@ -34,7 +32,7 @@ public class DoctorChangePassword extends JFrame implements ActionListener{
         p2.setBounds(200,260,150,30);
         add(p2);
 		
-	      l3=new JLabel("Confirm Password");
+        l3=new JLabel("Confirm Password");
         l3.setFont(new Font("Times New Roman",Font.PLAIN,17));
         l3.setBounds(60,300,150,30);
         add(l3);
