@@ -146,6 +146,7 @@ public class SeePastReport extends JFrame implements ActionListener
     
     public void ShowBTactionPerformed(ActionEvent e)
     {
+        PastReportTableModel.setRowCount(0);
         String TokenNo,PatientName;
         if(getTokenNo.getText().equals(""))
         {
