@@ -287,7 +287,15 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             }catch(Exception e){
                 e.printStackTrace();
             }
-            
+            JOptionPane.showMessageDialog(null,"Bill is Opening. Please Wait for a while");
+            File pdfFile = new File("D:\\SGP-1\\Database\\"+MobileNumber+"\\Bill\\"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf");
+            try{
+                if(Desktop.isDesktopSupported()){
+                    Desktop.getDesktop().open(pdfFile);
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }else if(ae.getSource()==Back){
             new Chemist().setVisible(true);
             this.setVisible(false);
