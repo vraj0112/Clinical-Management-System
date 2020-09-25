@@ -646,7 +646,7 @@ public class AddReport extends JFrame implements ActionListener
 
                 rs = null;
 
-                String PathName = "F:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
+                String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
                 Document doc = new Document();
                 PdfWriter.getInstance(doc, new FileOutputStream(PathName));
                 doc.setMargins(20f,20f,5f,5f);
