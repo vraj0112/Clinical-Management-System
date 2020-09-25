@@ -1,5 +1,6 @@
 package clinical.management.system;
 
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -645,7 +646,7 @@ public class AddReport extends JFrame implements ActionListener
 
                 rs = null;
 
-                String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
+                String PathName = "F:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
                 Document doc = new Document();
                 PdfWriter.getInstance(doc, new FileOutputStream(PathName));
                 doc.setMargins(20f,20f,5f,5f);
@@ -976,6 +977,9 @@ public class AddReport extends JFrame implements ActionListener
                 E.printStackTrace();
             }
         }
+        
+        dispname.setText("");
+        entertoken.setText("");
     }
     
     public void InsertMedactionPerformed(ActionEvent e)
