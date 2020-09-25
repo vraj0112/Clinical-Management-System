@@ -493,16 +493,6 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             {
                 ae.printStackTrace();
             }
-            
-
-
-        try{
-            connection c = new connection();
-            c.createConnection();
-            
-        }catch(Exception ae){
-            ae.printStackTrace();
-        }
         }
     }
     
