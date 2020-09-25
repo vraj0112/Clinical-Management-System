@@ -30,6 +30,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
     String dd,mm,yyyy;
     String hh="",mt="";
     String MobileNumber="";
+    
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource()==search){
             MedicineTableModel.setRowCount(0);
@@ -350,6 +351,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             this.setVisible(false);
         }
     }
+    
     SeeMedicineInfo()
     {
         ImageIcon  tempDarkBackGroundImport = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackGround.png"));
@@ -409,7 +411,14 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
         
         search=new JButton(i3);
         search.setBounds(405,70,40,29);
-        search.addActionListener(this);
+        search.addActionListener(
+                new ActionListener(){
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        searchactionPerformed(e);
+                    }
+                }
+        );
         add(search);
         
         medicineTable= new JTable()
@@ -456,6 +465,99 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         setVisible(true);
     }
+    
+    public void searchactionPerformed(ActionEvent e)
+    {
+        String token =  tokenTextField.getText();
+
+        if(token.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Please Enter TokenNumber");
+        }
+        else
+        {    
+            int No_Of_Row = MedicineTableModel.getRowCount();
+            for(int i=No_Of_Row - 1 ; i>=0 ; i--)
+            {
+                MedicineTableModel.removeRow(i);
+            }
+        
+            try
+            {
+                connection c = new connection();
+                c.createConnection();
+            
+                String getData = "Select * from clinicms.appointment where tokenid = '"+token+"'";
+                ResultSet rs = c.s.executeQuery(getData);
+                if(rs.next())
+                {   
+                    dispNameLabel.setText(rs.getString("name"));
+                    dispMobileLabel.setText(rs.getString("mobile"));
+                    
+                    MobileNumber = dispMobileLabel.getText();
+                    java.util.Date TodayDate = new java.util.Date();
+                    String dd_formate = "dd";
+                    String mm_formate = "MM";
+                    String yyyy_formate = "YYYY";
+                    SimpleDateFormat SDFdd = new SimpleDateFormat(dd_formate);
+                    dd = SDFdd.format(TodayDate);
+                    SimpleDateFormat SDFmm = new SimpleDateFormat(mm_formate);
+                    mm = SDFmm.format(TodayDate);
+                    SimpleDateFormat SDFyyyy = new SimpleDateFormat(yyyy_formate);
+                    yyyy = SDFyyyy.format(TodayDate);
+                    
+                    rs = null;
+                    String gethhmt = "Select * from patient"+MobileNumber+".time_record where dd = '"+dd+"' AND mm = '"+mm+"' AND yyyy = '"+yyyy+"'";
+                    rs = c.s.executeQuery(gethhmt);
+                    while(rs.next())
+                    {
+                        hh = rs.getString("hh");
+                        mt = rs.getString("mt");
+                    }
+                    
+                    rs = null;
+                    
+                    String getMedicineTable = "Select * from patient"+MobileNumber+".m_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+"";
+                    rs = c.s.executeQuery(getMedicineTable);
+                    
+                    while(rs.next())
+                    {
+                        String medicineName = rs.getString("medicinename");
+                        String medicineType = rs.getString("medicinetype");
+                        String Dosage = rs.getString("Dosage");
+                        String inMorning = rs.getString("inmorning");
+                        String inNoon = rs.getString("innoon");
+                        String inEvening = rs.getString("inevening");
+                        String B_a_meal = rs.getString("b_a_meal");
+                        String Quantity = rs.getString("Quantity");
+                        
+                        MedicineTableModel.addRow(new Object[]{medicineName,medicineType,Dosage,inMorning,inNoon,inEvening,B_a_meal,Quantity});  
+                    }
+                    medicineTable.setModel(MedicineTableModel);
+                    c.disconnectConnection();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,"Please enter valid Token number.");
+                }               
+            }
+            catch(Exception ae)
+            {
+                ae.printStackTrace();
+            }
+            
+
+
+        try{
+            connection c = new connection();
+            c.createConnection();
+            
+        }catch(Exception ae){
+            ae.printStackTrace();
+        }
+        }
+    }
+    
      public static void main(String[] args){
          new SeeMedicineInfo();
     }
