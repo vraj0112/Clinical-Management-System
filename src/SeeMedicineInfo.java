@@ -415,6 +415,9 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
         if(token.equals(""))
         {
             JOptionPane.showMessageDialog(null, "Please Enter TokenNumber");
+            dispNameLabel.setText("");
+            dispMobileLabel.setText("");
+            tokenTextField.setText("");
         }
         else
         {    
@@ -481,6 +484,9 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                 else
                 {
                     JOptionPane.showMessageDialog(null,"Please enter valid Token number.");
+                    dispNameLabel.setText("");
+                    dispMobileLabel.setText("");
+                    tokenTextField.setText("");
                 }               
             }
             catch(Exception ae)
