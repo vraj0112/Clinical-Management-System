@@ -32,65 +32,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
     String MobileNumber="";
     
     public void actionPerformed(ActionEvent ae){
-        if(ae.getSource()==search){
-            MedicineTableModel.setRowCount(0);
-            try{
-                connection c = new connection();
-                c.createConnection();
-                String token =  tokenTextField.getText();
-                String stmnt = "Select * from clinicms.appointment where tokenid = '"+token+"'";
-                ResultSet rs = c.s.executeQuery(stmnt);
-                if(rs.next()){
-                    dispNameLabel.setText(rs.getString("name"));
-                    dispMobileLabel.setText(rs.getString("mobile"));
-                }else{
-                    JOptionPane.showMessageDialog(null,"Please enter valid Token number.");
-                }
-                c.disconnectConnection();                
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            MobileNumber = dispMobileLabel.getText();
-            java.util.Date TodayDate = new java.util.Date();
-            String dd_formate = "dd";
-            String mm_formate = "MM";
-            String yyyy_formate = "YYYY";
-            SimpleDateFormat SDFdd = new SimpleDateFormat(dd_formate);
-            dd = SDFdd.format(TodayDate);
-            SimpleDateFormat SDFmm = new SimpleDateFormat(mm_formate);
-            mm = SDFmm.format(TodayDate);
-            SimpleDateFormat SDFyyyy = new SimpleDateFormat(yyyy_formate);
-            yyyy = SDFyyyy.format(TodayDate);
-            
-            try{
-                connection c = new connection();
-                c.createConnection();
-                String stmnt = "Select * from patient"+MobileNumber+".time_record where dd = '"+dd+"' AND mm = '"+mm+"' AND yyyy = '"+yyyy+"'";
-                ResultSet rs = c.s.executeQuery(stmnt);
-                while(rs.next()){
-                    hh = rs.getString("hh");
-                    mt = rs.getString("mt");
-                }
-                String stmnt2 = "Select * from patient"+MobileNumber+".m_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+"";
-                ResultSet rs1 = c.s.executeQuery(stmnt2);
-                while(rs1.next()){
-                    String medicineName = rs1.getString("medicinename");
-                    String medicineType = rs1.getString("medicinetype");
-                    String Dosage = rs1.getString("Dosage");
-                    String inMorning = rs1.getString("inmorning");
-                    String inNoon = rs1.getString("innoon");
-                    String inEvening = rs1.getString("inevening");
-                    String B_a_meal = rs1.getString("b_a_meal");
-                    String Quantity = rs1.getString("Quantity");
-                    MedicineTableModel.addRow(new Object[]{medicineName,medicineType,Dosage,inMorning,inNoon,inEvening,B_a_meal,Quantity});  
-                    
-                }
-                medicineTable.setModel(MedicineTableModel);
-                c.disconnectConnection();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }else if(ae.getSource()==generateBill){
+       if(ae.getSource()==generateBill){
             int medicineRowCount = medicineTable.getRowCount();
             Double[] medicinePrice = new Double[50];
             Double[] amount = new Double[50];
