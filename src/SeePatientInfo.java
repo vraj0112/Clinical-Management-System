@@ -29,6 +29,13 @@ public class SeePatientInfo extends JFrame implements ActionListener {
                     dispBloodLabel.setText(rs.getString("bloodgroup"));
                 }else{
                     JOptionPane.showMessageDialog(null, "Please Enter Valid Token Number");
+                    dispMobileLabel.setText("");
+                    dispNameLabel.setText("");
+                    dispGenderLabel.setText("");
+                    dispBirthLabel.setText("");
+                    dispAgeLabel.setText("");
+                    dispBloodLabel.setText("");
+                    tokenTextField.setText("");
                 }
                 c.disconnectConnection();
             }catch(Exception e){
