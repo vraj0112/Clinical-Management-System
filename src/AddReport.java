@@ -1,12 +1,6 @@
 package clinical.management.system;
 
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.kernel.pdf.*;
-import com.itextpdf.layout.element.Table;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Paragraph;
@@ -16,22 +10,15 @@ import java.awt.*;
 import javax.swing.border.*;
 import java.sql.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.StyleConstants.FontConstants;
-import static javax.swing.text.StyleConstants.FontFamily;
-//import org.jdom.Text;
-import com.itextpdf.layout.element.Text;  
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-//import com.itextpdf.
 
 public class AddReport extends JFrame implements ActionListener 
 {
