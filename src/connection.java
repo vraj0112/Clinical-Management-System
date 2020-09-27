@@ -11,7 +11,7 @@ class connection
     {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
-            c = DriverManager.getConnection("jdbc:mysql://localhost:3306","root","");
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/clinicms","root","");//root is the username and next argument is the password of mysql
             s = c.createStatement();
             
         }catch(Exception e){
