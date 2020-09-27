@@ -141,7 +141,7 @@ public class SeePastReport extends JFrame implements ActionListener
         this.setVisible(true);
         
         this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
     public void ShowBTactionPerformed(ActionEvent e)
