@@ -108,7 +108,7 @@ public class UpdatePatientDetails extends JFrame implements ActionListener {
         l0.setForeground(Color.WHITE);
         BackGround.add(l0);
         
-        ImageIcon i01 = new ImageIcon("C:\\Users\\hp\\Desktop\\Vraj Shah\\Vraj138\\Java\\Final Clinincal Management System\\cms\\updateDark.jpg");
+        ImageIcon i01 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/updateDark.jpg"));
         Image i02 = i01.getImage().getScaledInstance(200,200,Image.SCALE_DEFAULT);
         ImageIcon i03 = new ImageIcon(i02);
         
