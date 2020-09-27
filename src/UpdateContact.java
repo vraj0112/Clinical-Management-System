@@ -16,41 +16,7 @@ public class UpdateContact extends JFrame implements ActionListener{
     JButton SerachBT,UpdateBT,BackBT,ResetBT;
     
     public void actionPerformed(ActionEvent ae){
-        if(ae.getSource()==SerachBT){
-            try{
-                connection c = new connection();
-                c.createConnection();
-                String number = getMobileNumberTF.getText();
-                String str = "Select * from patientdetails where mobile = '"+number+"'";
-                ResultSet rs = c.s.executeQuery(str);
-                while(rs.next()){
-                    dispNameLabel.setText(rs.getString("name"));
-                }
-                
-                c.disconnectConnection();
-                c = null;
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }else if(ae.getSource()==UpdateBT){
-            try{
-                connection c = new connection();
-                c.createConnection();
-                String number = getMobileNumberTF.getText();
-                String new_number = NewMobileNumberTF.getText();
-                String str = "update patientdetails set mobile = '"+new_number+"' where mobile = '"+number+"'";
-                c.s.executeUpdate(str);
-                JOptionPane.showMessageDialog(null,"Contact Number changed Successfully");
-                getMobileNumberTF.setText("");
-                dispNameLabel.setText("");
-                NewMobileNumberTF.setText("");
-                
-                c.disconnectConnection();
-                c = null;
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }else if(ae.getSource()==BackBT){
+        if(ae.getSource()==BackBT){
             this.setVisible(false);
         }
     }
@@ -145,16 +111,7 @@ public class UpdateContact extends JFrame implements ActionListener{
         BackBT.setBounds(317,180,110,30);
         BackBT.setFont(new Font("Times New Roman",Font.PLAIN,20));
         add(BackBT);
-        BackBT.addActionListener
-        (
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        BackBTactionPerfomed(e);
-                    }
-                }
-        );
+        BackBT.addActionListener(this);
         
         setSize(500,265);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -229,6 +186,12 @@ public class UpdateContact extends JFrame implements ActionListener{
                     String str = "update clinicms.patientdetails set mobile = '"+new_number+"' where mobile = '"+number+"'";
                     c.s.executeUpdate(str);
                     
+                    String stmnt = "update clinicms.appointment set mobile = '"+new_number+"' where mobile = '"+number+"'";
+                    c.s.executeUpdate(stmnt);
+                    
+                    String stmnt1 = "update clinicms.billinfo set mobile = '"+new_number+"' where mobile = '"+number+"'";
+                    c.s.executeUpdate(stmnt1);
+                    
                     String NewDatabaseCreation = "create database patient"+new_number+";";
                     c.s.executeUpdate(NewDatabaseCreation);
 
@@ -249,14 +212,17 @@ public class UpdateContact extends JFrame implements ActionListener{
                         c.s.executeUpdate(copyTable);
                     }
 
-                    File sourceFile = new File("F:\\SGP-1\\Database\\"+number);
-                    File destFile = new File("F:\\SGP-1\\Database\\"+new_number);
+                    File sourceFile = new File("D:\\SGP-1\\Database\\"+number);
+                    File destFile = new File("D:\\SGP-1\\Database\\"+new_number);
                     
                     if(sourceFile.renameTo(destFile))
                     {
-                        System.out.println("Folder Renamed Successfully");
+                        
                     }
                     
+                    String dropDatabase = "Drop database patient"+number;
+                    c.s.executeUpdate(dropDatabase);
+                                     
                     JOptionPane.showMessageDialog(null,"Contact Number changed Successfully");
                     
                     getMobileNumberTF.setText("");
@@ -271,13 +237,6 @@ public class UpdateContact extends JFrame implements ActionListener{
             }
         }     
     }
-        
-        
-     
-     public void BackBTactionPerfomed(ActionEvent e)
-     {
-         
-     }
      
      public void ResetBTactionPerfomed(ActionEvent e)
      {
@@ -290,4 +249,6 @@ public class UpdateContact extends JFrame implements ActionListener{
      public static void main(String args[]){
         new UpdateContact();
     }
+
+    
 }
