@@ -175,7 +175,7 @@ public class Appointment extends JFrame implements ActionListener {
         appointmentLabel.setForeground(Color.WHITE);
         BackGround.add(appointmentLabel);
         
-        ImageIcon i01 = new ImageIcon("C:\\Users\\hp\\Desktop\\Vraj Shah\\Vraj138\\Java\\Final Clinincal Management System\\cms\\appointmentDark.jpg");
+        ImageIcon i01 = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/appointmentDark.jpg"));
         Image i02 = i01.getImage().getScaledInstance(300,250,Image.SCALE_DEFAULT);
         ImageIcon i03 = new ImageIcon(i02);
         
