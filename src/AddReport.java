@@ -668,7 +668,7 @@ public class AddReport extends JFrame implements ActionListener
 
                 rs = null;
 
-                String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
+                String PathName = "F:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
                 Document doc = new Document();
                 PdfWriter.getInstance(doc, new FileOutputStream(PathName));
                 doc.setMargins(20f,20f,5f,5f);
@@ -1503,6 +1503,16 @@ public class AddReport extends JFrame implements ActionListener
                     
                     Object[] value = {medicinename , medicinetype , dosage , inmorning, innoon, inevening, b_a_meal, quantity};
                     MedicineTableModel.addRow(value);
+                }
+                
+                stmnt = "select Precautions,Allergies,Disease from patient"+MobileNumber+".time_record where dd="+dd+" and mm="+mm+" and yyyy="+yyyy+" and hh="+hh+" and mt="+mt;
+                rs = c.s.executeQuery(stmnt);
+                
+                if(rs.next())
+                {
+                    PrecautionsText.setText(rs.getString("Precautions"));
+                    AllergyText.setText(rs.getString("Allergies"));
+                    DiseaseTF.setText(rs.getString("Disease"));
                 }
             }
             catch(Exception E)
