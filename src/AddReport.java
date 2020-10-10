@@ -20,8 +20,9 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import java.util.concurrent.ExecutionException;
 
-public class AddReport extends JFrame implements ActionListener 
+public class AddReport extends JFrame implements ActionListener
 {
     JLabel DarkBackGroundLabel,addReport,token,name,dispname,medicineType,MedicineNameLabel,dosage,QuantityType,QuantityLabel,DosageParameter;
     JLabel Symptoms,effectLabel,OtherSymptomLabel,PrecautionsLabel,AllergyLabel,DateLabel,TimeLabel,dispDate,dispTime;
@@ -48,6 +49,11 @@ public class AddReport extends JFrame implements ActionListener
     
     String Precautions,Allergy,Disease,Name,tokennumber;
     
+    Dimension dim ;
+    
+    JTable PastEntriesTB;
+    DefaultTableModel PastEntryTableModel;
+   
     public void actionPerformed(ActionEvent ae)
     {
         if(ae.getSource()==searchToken){
@@ -72,7 +78,7 @@ public class AddReport extends JFrame implements ActionListener
     
     AddReport()
     {
-
+        
         ImageIcon  tempDarkBackGroundImport = new ImageIcon(ClassLoader.getSystemResource("clinical/management/system/cms/DarkBackGround.png"));
         Image temp = tempDarkBackGroundImport.getImage().getScaledInstance(1300, 50, Image.SCALE_DEFAULT);
         ImageIcon DarkBackGroundImport = new ImageIcon(temp);
@@ -565,7 +571,7 @@ public class AddReport extends JFrame implements ActionListener
         add(Back);
         
         setSize(1300,900);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         setResizable(false);
         setTitle("Add Report");
@@ -1099,6 +1105,7 @@ public class AddReport extends JFrame implements ActionListener
         if(symptomsTable.getSelectedRowCount() == 1)
         {
             SymptomsTableModel.removeRow(symptomsTable.getSelectedRow());
+            resetsymptomsFields();
         }
         else if(symptomsTable.getSelectedRowCount() > 1)
         {
@@ -1307,7 +1314,8 @@ public class AddReport extends JFrame implements ActionListener
         }
     }
     
-    public void PastEntriesactionPerformed(ActionEvent e){
+    public void PastEntriesactionPerformed(ActionEvent e)
+    {
         if(Name!=null){
             pastEntry = new JFrame();
         
@@ -1331,14 +1339,14 @@ public class AddReport extends JFrame implements ActionListener
             dispNameLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
             pastEntry.add(dispNameLabel);
             
-            JTable PastEntriesTB = new JTable()
+            PastEntriesTB = new JTable()
             {
                 public boolean isCellEditable(int row, int column){
                     return false;
                 } 
             };
 
-            DefaultTableModel PastEntryTableModel = (DefaultTableModel)PastEntriesTB.getModel();
+            PastEntryTableModel = (DefaultTableModel)PastEntriesTB.getModel();
             PastEntriesTB.setModel(PastEntryTableModel);
             Object []PastEntriesTableCloumnModel = {"Time Record"};
             PastEntryTableModel.setColumnIdentifiers(PastEntriesTableCloumnModel);
@@ -1417,7 +1425,8 @@ public class AddReport extends JFrame implements ActionListener
             );
             pastEntry.add(BackPE);
             
-            pastEntry.setBounds(650,300,600,500);
+            pastEntry.setSize(600,500);
+            pastEntry.setLocation(dim.width/2-pastEntry.getSize().width/2, dim.height/2-pastEntry.getSize().height/2);
             pastEntry.setResizable(false);
             pastEntry.setTitle("Past Entries");
             pastEntry.setLayout(null);
@@ -1427,15 +1436,87 @@ public class AddReport extends JFrame implements ActionListener
         }
         
     }
-    public void BackPEactionPerformed(ActionEvent e){
+    
+    public void BackPEactionPerformed(ActionEvent e)
+    {
         pastEntry.setVisible(false);
     }
-    public void LoadDataactionPerformed(ActionEvent e){
+    
+    public void LoadDataactionPerformed(ActionEvent e)
+    {
+        int medicines_row_count = medicineTable.getRowCount();
+        for(int i = medicines_row_count - 1; i>=0 ; i--)
+        {
+            MedicineTableModel.removeRow(i);
+        }
         
+        int symptoms_row_count = symptomsTable.getRowCount();
+        for(int i = symptoms_row_count - 1; i>=0 ; i--)
+        {
+            SymptomsTableModel.removeRow(i);
+        }
+        
+        if(PastEntriesTB.getSelectedRowCount() == 1)
+        {
+            int row_no = PastEntriesTB.getSelectedRow();
+            
+            String dd,mm, yyyy ,hh ,mt;
+           
+            String DateToOpen = (String)PastEntryTableModel.getValueAt(row_no, 0);
+            dd = DateToOpen.substring(0,2);
+            mm = DateToOpen.substring(3,5);
+            yyyy = DateToOpen.substring(6,10);
+            hh = DateToOpen.substring(13,15);
+            mt = DateToOpen.substring(16,18);
+
+            try
+            {
+                connection c = new connection();
+                c.createConnection();
+                
+                String stmnt = "select * from patient"+MobileNumber+".s_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt;
+                ResultSet rs = c.s.executeQuery(stmnt);
+                
+                while(rs.next())
+                {
+                    String symptom_name = rs.getString("symptomname");
+                    String effect_level = rs.getString("effectlevel");
+                    String other_things = rs.getString("othernotes");
+                    
+                    Object[] value = new Object[]{symptom_name,effect_level,other_things};
+                    SymptomsTableModel.addRow(value);
+                } 
+                
+                stmnt = "select * from patient"+MobileNumber+".m_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt;
+                rs = c.s.executeQuery(stmnt);
+                
+                while(rs.next())
+                {
+                    String medicinename = rs.getString("medicinename");
+                    String medicinetype = rs.getString("medicinetype");
+                    String dosage = rs.getString("dosage");
+                    String inmorning = rs.getString("inmorning");
+                    String innoon = rs.getString("innoon");
+                    String inevening = rs.getString("inevening");
+                    String b_a_meal = rs.getString("b_a_meal");
+                    String quantity = rs.getString("quantity");
+                    
+                    Object[] value = {medicinename , medicinetype , dosage , inmorning, innoon, inevening, b_a_meal, quantity};
+                    MedicineTableModel.addRow(value);
+                }
+            }
+            catch(Exception E)
+            {
+                JOptionPane.showMessageDialog(null, "Hekkkp");
+                E.printStackTrace();
+            }
+        }
+        
+        pastEntry.setVisible(false);
     }
+    
     public static void main(String args[])
     {
         new AddReport();
     }
-
 }
