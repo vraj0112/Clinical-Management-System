@@ -26,7 +26,7 @@ public class AddReport extends JFrame implements ActionListener
     JLabel DarkBackGroundLabel,addReport,token,name,dispname,medicineType,MedicineNameLabel,dosage,QuantityType,QuantityLabel,DosageParameter;
     JLabel Symptoms,effectLabel,OtherSymptomLabel,PrecautionsLabel,AllergyLabel,DateLabel,TimeLabel,dispDate,dispTime;
     JTextField entertoken,enterDosage,Quantity,OtherSymptomText,PrecautionsText,AllergyText;
-    JButton searchToken,Add,Reset,Back,InsertMed,EditMed,DeleteMed,InsertSymptoms,EditSymptoms,DeleteSymptoms,UpdateSymptoms,UpdateMed;
+    JButton searchToken,Add,Reset,Back,InsertMed,EditMed,DeleteMed,InsertSymptoms,EditSymptoms,DeleteSymptoms,UpdateSymptoms,UpdateMed,PastEntries;
     JPanel addMedicine,addSymptoms,addOthers;
     String number;
     JComboBox MedicineTypeCMB,MedicineNameCMB,effectlevelCMB,symptomsCMB;
@@ -42,9 +42,11 @@ public class AddReport extends JFrame implements ActionListener
     JLabel DiseaseLabel;
     JTextField DiseaseTF;
     
+    JFrame pastEntry;
+    
     String dd,mm,yyyy,hh,mt;
     
-    String Precautions,Allergy,Disease;
+    String Precautions,Allergy,Disease,Name,tokennumber;
     
     public void actionPerformed(ActionEvent ae)
     {
@@ -113,7 +115,21 @@ public class AddReport extends JFrame implements ActionListener
                     }
                 }
         );
-
+        
+        PastEntries=new JButton("Past Entries");
+        PastEntries.setBounds(250,70,150,29);
+        PastEntries.setFont(new Font("Times New Roman",Font.PLAIN,20));
+        add(PastEntries);
+        PastEntries.addActionListener
+        (
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        PastEntriesactionPerformed(e);
+                    }
+                }
+        );
         
         name = new JLabel("Name : ");
         name.setBounds(20,100,100,50);
@@ -646,7 +662,7 @@ public class AddReport extends JFrame implements ActionListener
 
                 rs = null;
 
-                String PathName = "F:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
+                String PathName = "D:\\SGP-1\\Database\\" + MobileNumber + "\\Report\\" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+".pdf";
                 Document doc = new Document();
                 PdfWriter.getInstance(doc, new FileOutputStream(PathName));
                 doc.setMargins(20f,20f,5f,5f);
@@ -1271,7 +1287,7 @@ public class AddReport extends JFrame implements ActionListener
         {
             connection c = new connection();
             c.createConnection();
-            String tokennumber = entertoken.getText();
+            tokennumber = entertoken.getText();
             String str = "Select name,mobile from clinicms.appointment where tokenid = '"+tokennumber+"'";
             ResultSet rs = c.s.executeQuery(str);
             if(rs.next())
@@ -1283,6 +1299,7 @@ public class AddReport extends JFrame implements ActionListener
             {
                 JOptionPane.showMessageDialog(null, "Please Enter Valid Token Number");
             }
+            Name=dispname.getText();
         }
         catch(Exception E)
         {
@@ -1290,6 +1307,132 @@ public class AddReport extends JFrame implements ActionListener
         }
     }
     
+    public void PastEntriesactionPerformed(ActionEvent e){
+        if(Name!=null){
+            pastEntry = new JFrame();
+        
+            JLabel TokenLabel = new JLabel("Token id : ");
+            TokenLabel.setBounds(20,20,150,50);
+            TokenLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            pastEntry.add(TokenLabel);
+
+            JLabel dispTokenLabel = new JLabel(tokennumber);
+            dispTokenLabel.setBounds(120,30,70,30);
+            dispTokenLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            pastEntry.add(dispTokenLabel);
+
+            JLabel NameLabel = new JLabel("Name : ");
+            NameLabel.setBounds(20,60,150,50);
+            NameLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            pastEntry.add(NameLabel);
+
+            JLabel dispNameLabel = new JLabel(Name);
+            dispNameLabel.setBounds(120,70,200,30);
+            dispNameLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            pastEntry.add(dispNameLabel);
+            
+            JTable PastEntriesTB = new JTable()
+            {
+                public boolean isCellEditable(int row, int column){
+                    return false;
+                } 
+            };
+
+            DefaultTableModel PastEntryTableModel = (DefaultTableModel)PastEntriesTB.getModel();
+            PastEntriesTB.setModel(PastEntryTableModel);
+            Object []PastEntriesTableCloumnModel = {"Time Record"};
+            PastEntryTableModel.setColumnIdentifiers(PastEntriesTableCloumnModel);
+            PastEntriesTB.setFont(new Font("Times New Roman",Font.PLAIN,18));
+
+            JScrollPane sp = new JScrollPane(PastEntriesTB);
+            sp.setBounds(5,110,570,270);
+            pastEntry.add(sp);
+            String Token = dispTokenLabel.getText();
+            String PatientName = dispNameLabel.getText();
+            try
+            {
+                connection c = new connection();
+                c.createConnection();
+
+                String getMobileNumber = "select * from clinicms.appointment where tokenid = '"+Token+"'";
+                ResultSet rs = c.s.executeQuery(getMobileNumber);
+                rs.next();
+
+                MobileNumber = rs.getString("mobile");
+                PatientName = rs.getString("name");
+                rs = null;
+
+                dispNameLabel.setText(PatientName);
+                
+                String getTimeLine = "select * from patient"+MobileNumber+".time_record";
+                rs = c.s.executeQuery(getTimeLine);
+
+                while(rs.next())
+                {
+                    String Date = "";
+                    Date += rs.getString("dd");
+                    Date += "/";
+                    Date += rs.getString("mm");
+                    Date += "/";
+                    Date += rs.getString("yyyy");
+                    Date += "   ";
+                    Date += rs.getString("hh");
+                    Date += ":";
+                    Date += rs.getString("mt");
+
+                    Object[] Value = {Date};
+
+                    PastEntryTableModel.addRow(Value);
+                }
+            }catch(Exception E){
+                E.printStackTrace();
+            }
+        
+        
+            JButton LoadData = new JButton("Load Data");
+            LoadData.setBounds(100,400,130,40);
+            LoadData.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            LoadData.addActionListener(
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        LoadDataactionPerformed(e);
+                    }
+                }  
+            );
+            pastEntry.add(LoadData);
+            
+            JButton BackPE = new JButton("Back");
+            BackPE.setBounds(350,400,130,40);
+            BackPE.setFont(new Font("Times New Roman",Font.PLAIN,20));
+            BackPE.addActionListener(
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        BackPEactionPerformed(e);
+                    }
+                }
+            );
+            pastEntry.add(BackPE);
+            
+            pastEntry.setBounds(650,300,600,500);
+            pastEntry.setResizable(false);
+            pastEntry.setTitle("Past Entries");
+            pastEntry.setLayout(null);
+            pastEntry.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null,"Please Enter valid Token Number.");
+        }
+        
+    }
+    public void BackPEactionPerformed(ActionEvent e){
+        pastEntry.setVisible(false);
+    }
+    public void LoadDataactionPerformed(ActionEvent e){
+        
+    }
     public static void main(String args[])
     {
         new AddReport();
