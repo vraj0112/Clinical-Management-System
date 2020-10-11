@@ -86,7 +86,7 @@ public class AddPatient extends JFrame implements ActionListener {
                     BloodGroupCMB.setSelectedIndex(0);
                     MobileNumberTF.setText("");
                     AddressTA.setText("");
-                    String CreateTable = "create table Patient" + mobile + ".time_record (dd varchar(3), mm varchar(3), yyyy varchar(5), hh varchar(3), mt varchar(3), Precautions varchar(150), Allergies varchar(150), Disease varchar(150))";
+                    String CreateTable = "create table Patient" + mobile + ".time_record (dd varchar(3), mm varchar(3), yyyy varchar(5), hh varchar(3), mt varchar(3), Precautions varchar(150), Allergies varchar(150), Disease varchar(150), Consulting boolean)";
                     c.s.executeUpdate(CreateTable);
                     c.disconnectConnection();
                     c = null;
