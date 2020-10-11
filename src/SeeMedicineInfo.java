@@ -31,14 +31,21 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
     String dd,mm,yyyy;
     String hh="",mt="";
     String MobileNumber="";
+    JFrame pastEntry;
+    JTable PastEntriesTB;
+    DefaultTableModel PastEntryTableModel;
+    Dimension dim;
+    Double consultingFees = 0.00;
     
-    public void actionPerformed(ActionEvent ae){
+    
+    public void actionPerformed(ActionEvent ae)
+    {
        if(ae.getSource()==generateBill){
             int medicineRowCount = medicineTable.getRowCount();
             Double[] medicinePrice = new Double[50];
             Double[] amount = new Double[50];
             Double[] quantity = new Double[50];
-            Double total=0.0,consultingFees=200.0,NetTotal=0.0;
+            Double total=0.0,NetTotal=0.0;
             try{
                 connection c = new connection();
                 c.createConnection();
@@ -349,6 +356,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
         l1=new JLabel("Token Number");
         l1.setFont(new Font("Times New Roman",Font.PLAIN,23));
         l1.setBounds(170,60,200,50);
+        
         add(l1);
         
         tokenTextField=new JTextField();
@@ -412,7 +420,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
         setResizable(false);
         setLayout(null);
         setSize(660,650);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         setVisible(true);
     }
@@ -445,8 +453,11 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                 ResultSet rs = c.s.executeQuery(getData);
                 if(rs.next())
                 {   
-                    dispNameLabel.setText(rs.getString("name"));
-                    dispMobileLabel.setText(rs.getString("mobile"));
+                    String name = rs.getString("name");
+                    String mobile = rs.getString("mobile");
+                    
+                    dispNameLabel.setText(name);
+                    dispMobileLabel.setText(mobile);
                     
                     MobileNumber = dispMobileLabel.getText();
                     java.util.Date TodayDate = new java.util.Date();
@@ -460,52 +471,179 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
                     SimpleDateFormat SDFyyyy = new SimpleDateFormat(yyyy_formate);
                     yyyy = SDFyyyy.format(TodayDate);
                     
+                    pastEntry = new JFrame();
+        
+                    JLabel TokenLabel = new JLabel("Token id : ");
+                    TokenLabel.setBounds(20,20,150,50);
+                    TokenLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    pastEntry.add(TokenLabel);
+
+                    JLabel dispTokenLabel = new JLabel(token);
+                    dispTokenLabel.setBounds(120,30,70,30);
+                    dispTokenLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    pastEntry.add(dispTokenLabel);
+
+                    JLabel NameLabel = new JLabel("Name : ");
+                    NameLabel.setBounds(20,60,150,50);
+                    NameLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    pastEntry.add(NameLabel);
+
+                    JLabel dispNameLabel = new JLabel(name);
+                    dispNameLabel.setBounds(120,70,200,30);
+                    dispNameLabel.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    pastEntry.add(dispNameLabel);
+            
+                    PastEntriesTB = new JTable()
+                    {
+                        public boolean isCellEditable(int row, int column){
+                            return false;
+                        } 
+                    };
+
+                    PastEntryTableModel = (DefaultTableModel)PastEntriesTB.getModel();
+                    PastEntriesTB.setModel(PastEntryTableModel);
+                    Object []PastEntriesTableCloumnModel = {"Time Record"};
+                    PastEntryTableModel.setColumnIdentifiers(PastEntriesTableCloumnModel);
+                    PastEntriesTB.setFont(new Font("Times New Roman",Font.PLAIN,18));
+
+                    JScrollPane sp = new JScrollPane(PastEntriesTB);
+                    sp.setBounds(5,110,570,270);
+                    pastEntry.add(sp);
+                    
                     rs = null;
                     String gethhmt = "Select * from patient"+MobileNumber+".time_record where dd = '"+dd+"' AND mm = '"+mm+"' AND yyyy = '"+yyyy+"'";
                     rs = c.s.executeQuery(gethhmt);
+
                     while(rs.next())
                     {
-                        hh = rs.getString("hh");
-                        mt = rs.getString("mt");
+                        String Date = "";
+                        Date += rs.getString("dd");
+                        Date += "/";
+                        Date += rs.getString("mm");
+                        Date += "/";
+                        Date += rs.getString("yyyy");
+                        Date += "   ";
+                        Date += rs.getString("hh");
+                        Date += ":";
+                        Date += rs.getString("mt");
+
+                        Object[] Value = {Date};
+
+                        PastEntryTableModel.addRow(Value);
                     }
-                    
-                    rs = null;
-                    
-                    String getMedicineTable = "Select * from patient"+MobileNumber+".m_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+"";
-                    rs = c.s.executeQuery(getMedicineTable);
-                    
-                    while(rs.next())
-                    {
-                        String medicineName = rs.getString("medicinename");
-                        String medicineType = rs.getString("medicinetype");
-                        String Dosage = rs.getString("Dosage");
-                        String inMorning = rs.getString("inmorning");
-                        String inNoon = rs.getString("innoon");
-                        String inEvening = rs.getString("inevening");
-                        String B_a_meal = rs.getString("b_a_meal");
-                        String Quantity = rs.getString("Quantity");
-                        
-                        MedicineTableModel.addRow(new Object[]{medicineName,medicineType,Dosage,inMorning,inNoon,inEvening,B_a_meal,Quantity});  
-                    }
-                    medicineTable.setModel(MedicineTableModel);
-                    c.disconnectConnection();
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null,"Please enter valid Token number.");
-                    dispNameLabel.setText("");
-                    dispMobileLabel.setText("");
-                    tokenTextField.setText("");
-                }               
+
+
+                    JButton LoadData = new JButton("Load Data");
+                    LoadData.setBounds(100,400,130,40);
+                    LoadData.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    LoadData.addActionListener(
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent e)
+                            {
+                                LoadDataactionPerformed(e);
+                            }
+                        }  
+                    );
+                    pastEntry.add(LoadData);
+
+                    JButton BackPE = new JButton("Back");
+                    BackPE.setBounds(350,400,130,40);
+                    BackPE.setFont(new Font("Times New Roman",Font.PLAIN,20));
+                    BackPE.addActionListener(
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent e)
+                            {
+                                BackPEactionPerformed(e);
+                            }
+                        }
+                    );
+                    pastEntry.add(BackPE);
+
+                    pastEntry.setSize(600,500);
+                    pastEntry.setLocation(dim.width/2-pastEntry.getSize().width/2, dim.height/2-pastEntry.getSize().height/2);
+                    pastEntry.setResizable(false);
+                    pastEntry.setTitle("Past Entries");
+                    pastEntry.setLayout(null);
+                    pastEntry.setVisible(true);
+                }else{
+                    JOptionPane.showMessageDialog(null,"Please Enter valid Token Number.");
+                }             
             }
-            catch(Exception ae)
-            {
-                ae.printStackTrace();
-            }
+            catch(Exception ae){}
         }
     }
     
-     public static void main(String[] args){
+    public void LoadDataactionPerformed(ActionEvent e)
+    {
+        if(PastEntriesTB.getSelectedRowCount() == 1)
+        {
+            int row_no = PastEntriesTB.getSelectedRow();
+           
+            String DateToOpen = (String)PastEntryTableModel.getValueAt(row_no, 0);
+            hh = DateToOpen.substring(13,15);
+            mt = DateToOpen.substring(16,18);
+
+            try
+            {
+                connection c = new connection();
+                c.createConnection(); 
+
+                String stmnt = "select * from patient"+MobileNumber+".m_"+dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt;
+                ResultSet rs = c.s.executeQuery(stmnt);
+                
+                while(rs.next())
+                {
+                    String medicinename = rs.getString("medicinename");
+                    String medicinetype = rs.getString("medicinetype");
+                    String dosage = rs.getString("dosage");
+                    String inmorning = rs.getString("inmorning");
+                    String innoon = rs.getString("innoon");
+                    String inevening = rs.getString("inevening");
+                    String b_a_meal = rs.getString("b_a_meal");
+                    String quantity = rs.getString("quantity");
+                    
+                    Object[] value = {medicinename , medicinetype , dosage , inmorning, innoon, inevening, b_a_meal, quantity};
+                    MedicineTableModel.addRow(value);
+                }
+                
+                stmnt = "select Consulting from patient"+MobileNumber+".time_record where dd="+dd+" and mm="+mm+" and yyyy="+yyyy+" and hh="+hh+" and mt="+mt;
+                rs = c.s.executeQuery(stmnt);
+                rs.next();
+                
+                if(rs.getString("Consulting").equals("1"))
+                {
+                    consultingFees = 200.00;
+                }
+                else
+                {
+                    consultingFees = 0.00;
+                }
+            }
+            catch(Exception E)
+            {
+                JOptionPane.showMessageDialog(null, "Hekkkp");
+                E.printStackTrace();
+            }
+            pastEntry.setVisible(false);
+        }
+        else if(PastEntriesTB.getSelectedRowCount() > 1)
+        {
+            JOptionPane.showMessageDialog(null, "Please Select Only One Record");
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Please Select record");
+        }
+    }
+    
+    public void BackPEactionPerformed(ActionEvent e)
+    {
+        pastEntry.setVisible(false);
+    }
+    
+    public static void main(String[] args){
          new SeeMedicineInfo();
     }
 }
