@@ -31,7 +31,7 @@ public class AddReport extends JFrame implements ActionListener
     JPanel addMedicine,addSymptoms,addOthers;
     String number;
     JComboBox MedicineTypeCMB,MedicineNameCMB,effectlevelCMB,symptomsCMB;
-    JCheckBox MorningCB, AtnoonCB, EveningCB;
+    JCheckBox MorningCB, AtnoonCB, EveningCB,ConsultingFees;
     ButtonGroup RadioGroup;
     JRadioButton BeforeMealRB, AfterMealRB;
     JTable medicineTable,symptomsTable;
@@ -136,6 +136,12 @@ public class AddReport extends JFrame implements ActionListener
                     }
                 }
         );
+        
+        ConsultingFees = new JCheckBox("Take Consulting Fees");
+        ConsultingFees.setBounds(450,70,200,30);
+        ConsultingFees.setFont(new Font("Times New Roman",Font.PLAIN,18));
+        ConsultingFees.setSelected(true);
+        add(ConsultingFees);
         
         name = new JLabel("Name : ");
         name.setBounds(20,100,100,50);
@@ -966,8 +972,20 @@ public class AddReport extends JFrame implements ActionListener
                 Allergy = AllergyText.getText();
                 Disease = DiseaseTF.getText();
 
-                String AddTime ="insert into patient" + MobileNumber + ".time_record  (dd,mm,yyyy,hh,mt,Precautions,Allergies,Disease) value ('" +dd+ "','" +mm+ "','" +yyyy+ "','" +hh+ "','" +mt+ "','" +Precautions+ "','" +Allergy+ "','" +Disease+ "')";
+                String consulting = null;
+                    
+                if(ConsultingFees.isSelected())
+                {
+                    consulting = "1";
+                }
+                else
+                {
+                    consulting = "0";
+                }
+
+                String AddTime ="insert into patient" + MobileNumber + ".time_record (dd,mm,yyyy,hh,mt,Precautions,Allergies,Disease,Consulting) value ('" +dd+ "','" +mm+ "','" +yyyy+ "','" +hh+ "','" +mt+ "','" +Precautions+ "','" +Allergy+ "','" +Disease+ "','"+consulting+"')";
                 c.s.executeUpdate(AddTime);
+           
 
                 String Create_Symptoms_Table = "create table patient" + MobileNumber + ".S_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (symptomname varchar(20), effectlevel varchar(15), othernotes varchar(30))";
                 String Create_Medicines_Table = "create table patient" + MobileNumber + ".M_" +dd+"_"+mm+"_"+yyyy+"_"+hh+"_"+mt+" (medicinename varchar(30), medicinetype varchar(15), dosage varchar(10), inmorning enum('Yes','No'), innoon enum('Yes','No'), inevening enum('Yes','No'), b_a_meal enum('Before Meal','After meal'), quantity varchar(10))";
