@@ -289,7 +289,7 @@ public class SeeMedicineInfo extends JFrame implements ActionListener{
             try{
                 connection c = new connection();
                 c.createConnection();
-                String stmnt = "Update clinicms.billinfo set nettotal = '"+netTotalPrecision+"' where mobile = '"+MobileNumber+"'";
+                String stmnt = "Update clinicms.billinfo set nettotal = '"+netTotalPrecision+"' where billno = '"+dispbillnumber+"'";
                 c.s.executeUpdate(stmnt);
                 c.disconnectConnection();
             }catch(Exception e){
