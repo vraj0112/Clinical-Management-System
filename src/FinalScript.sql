@@ -43,8 +43,7 @@ create table clinicms.patientdetails (mobile varchar(11), name varchar(40), gend
 ALTER TABLE `clinicms`.`patientdetails` 
 CHANGE COLUMN `mobile` `mobile` VARCHAR(11) NOT NULL ,
 ADD PRIMARY KEY (`mobile`),
-ADD UNIQUE INDEX `mobile_UNIQUE` (`mobile` ASC) VISIBLE;
-;
+ADD UNIQUE INDEX `mobile_UNIQUE` (`mobile` ASC);
 
 create table clinicms.billinfo(
 billno int NOT NULL AUTO_INCREMENT,
