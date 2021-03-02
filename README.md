@@ -4,7 +4,7 @@ Clinical Management System is a Desktop Application which is made using Core Jav
 
 This system cotains 3 modules Reception, Doctor and Chemist.
 
-<img src="https://user-images.githubusercontent.com/62846788/109663726-6e3f0e80-7b92-11eb-8aaa-272cdd037538.png" width="1000" height="1000"/>
+<img src="https://user-images.githubusercontent.com/62846788/109663726-6e3f0e80-7b92-11eb-8aaa-272cdd037538.png" width="500" height="500"/>
 
 Functionalities of Reception Module - Add Patient Info., Appointment, Update Patient Info., Update Contact Info.(as we have used Contact No. as a Primary Key)
 
