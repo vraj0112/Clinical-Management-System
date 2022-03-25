@@ -24,4 +24,4 @@ __Functionalities of Chemist Module - See Medicine Info. and Generate Bill, Add 
 
 ##
 
-__Here, in this repostitory we have uploaded all jar files and images which are required to develop this project including Source Code and SQL file in the src folder.__
+__Here, in this repostitory we have uploaded all jar files and images which are required to develop this project including Source Code and SQL file in the [src folder](https://github.com/vraj0112/Clinical-Management-System/tree/master/src).__
