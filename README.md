@@ -2,7 +2,7 @@
 
 __Clinical Management System is a Desktop Application which is made using Core Java concepts and MYSQL Database.__
 
-## Other Contributors
+## Contributors
 
 [Vraj Shah](https://github.com/vraj0112) ● [Uddhav Savani](https://github.com/uds0128) ● [Priyansh Shah](https://github.com/Priyansh42) ● [Ishan Shah](https://github.com/ishanshah1802)
 
